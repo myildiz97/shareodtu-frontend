@@ -20,29 +20,27 @@ export const authOptions: NextAuthOptions = {
 
         const { email, password } = credentials;
 
-        return null;
+        const formData = new URLSearchParams();
+        formData.append("username", email);
+        formData.append("password", password);
 
-        // Check credentials in db
-
-        // try {
-        //   await connectToDb();
-        //   const user = await User.findOne({ email });
-
-        //   if (!user) {
-        //     return null;
-        //   }
-
-        //   const passwordMatches = await bcrypt.compare(password, user.password);
-
-        //   if (!passwordMatches) {
-        //     return null;
-        //   }
-
-        //   return user;
-        // } catch (error) {
-        //   console.error(error);
-        //   return null;
-        // }
+        try {
+          const res = await fetch("http://localhost:8080/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: formData.toString(), // Send data as form-urlencoded
+          })
+          if (res.ok) {
+            return res.json();
+          } else {
+            return null;
+          }
+        } catch (error) {
+          console.error(error);
+          return null;
+        }
       },
     }),
   ],
