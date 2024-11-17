@@ -32,11 +32,21 @@ export const authOptions: NextAuthOptions = {
             },
             body: formData.toString(), // Send data as form-urlencoded
           })
-          if (res.ok) {
-            return res.json();
-          } else {
-            return null;
+          const { access_token, token_type } = await res.json();
+
+          const resUser = await fetch("http://localhost:8080/users/me", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `${token_type} ${access_token}`,
+            },
+          });
+          const user = await resUser.json();
+          if (resUser.ok && user) {
+            return user;
           }
+
+          return null;
         } catch (error) {
           console.error(error);
           return null;
@@ -58,6 +68,14 @@ export const authOptions: NextAuthOptions = {
         return { ...token, ...session };
       }
       return { ...token, ...user };
+    },
+    session: async ({ session, token }) => {
+      if (token) {
+        session.user.email = token.email as string;
+        session.user.full_name = token.full_name as string;
+        session.user.disabled = token.disabled as boolean;
+      }
+      return session;
     },
   },
 };
