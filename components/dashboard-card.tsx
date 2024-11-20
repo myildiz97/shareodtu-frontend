@@ -3,20 +3,24 @@ import { signOut, useSession } from 'next-auth/react';
 import * as React from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
+import toast from 'react-hot-toast';
 
 export default function DashboardCard() {
   const { data: session } = useSession();
   const handleLogout = async () => {
-    await signOut();
+    toast.success('See you soon!');
+    setTimeout(async () => {
+      await signOut();
+    }, 1000);
   };
 
   return (
-    <Card className="bg-foreground text-background w-[320px] sm:1/2 lg:w-1/3 xl:1/2">
+    <Card className="bg-foreground text-background w-[300px]">
       <CardHeader>
         <CardTitle>Authenticated User</CardTitle>
         <CardDescription>This is a protected route.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className='w-full'>
         <p className="text-wrap">
           Welcome, <strong>{session?.user.full_name}</strong>
         </p>

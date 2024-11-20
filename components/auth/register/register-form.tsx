@@ -51,9 +51,9 @@ export function RegisterForm() {
       });
 
       if (response.ok) {
-        toast.success('User registered successfully');
+        toast.success('You joined us successfully!');
         form.reset();
-        router.push('/login');
+        router.push('/auth/login');
       } else {
         toast.error('Error registering user');
       }
@@ -68,16 +68,16 @@ export function RegisterForm() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-[300px] md:w-1/3 flex flex-col justify-center items-center gap-y-4"
+          className="w-full flex flex-col justify-center items-center gap-y-4"
         >
           <FormField
             control={form.control}
             name="fullName"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel className="font-bold text-foreground text-xl">Full Name</FormLabel>
+                <FormLabel className="font-bold text-xl">Full Name</FormLabel>
                 <FormControl>
-                  <Input className="text-lg px-4 py-2 bg-foreground text-background" placeholder="Mehmet" {...field} />
+                  <Input className="text-lg px-4 py-2 bg-foreground text-background" placeholder="Kumpir" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -88,11 +88,11 @@ export function RegisterForm() {
             name="email"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel className="font-bold text-foreground text-xl">Email</FormLabel>
+                <FormLabel className="font-bold text-xl">Email</FormLabel>
                 <FormControl>
                   <Input
                     className="text-lg px-4 py-2 bg-foreground text-background"
-                    placeholder="myildizwork@gmail.com"
+                    placeholder="kumpir@metu.edu.tr"
                     type="email"
                     {...field}
                   />
@@ -106,11 +106,11 @@ export function RegisterForm() {
             name="password"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel className="font-bold text-foreground text-xl">Password</FormLabel>
+                <FormLabel className="font-bold text-xl">Password</FormLabel>
                 <FormControl>
                   <Input
                     className="text-lg px-4 py-2 bg-foreground text-background"
-                    placeholder="Password"
+                    placeholder="********"
                     type="password"
                     {...field}
                   />
@@ -119,13 +119,13 @@ export function RegisterForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" size={'lg'} className="text-lg bg-foreground text-background hover:bg-accent">
+          <Button type="submit" size={'lg'} className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground">
             Register
           </Button>
         </form>
       </Form>
-      <Link href="/login" className="text-foreground hover:text-accent">
-        I have account
+      <Link href="/auth/login" className="text-background hover:text-accent">
+        I have an account.
       </Link>
     </div>
   );

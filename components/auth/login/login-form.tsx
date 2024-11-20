@@ -47,6 +47,8 @@ export function LoginForm() {
         return;
       }
 
+      toast.success('Welcome back!');
+
       router.push('/dashboard');
     } catch (error) {
       console.error(error);
@@ -59,18 +61,18 @@ export function LoginForm() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-[300px] sm:w-1/2 lg:1/3 flex flex-col justify-center items-center gap-y-4"
+          className="w-full flex flex-col justify-center items-center gap-y-4"
         >
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel className="font-bold text-foreground text-xl">Email</FormLabel>
+                <FormLabel className="font-bold text-xl">Email</FormLabel>
                 <FormControl>
                   <Input
                     className="text-lg px-4 py-2 bg-foreground text-background"
-                    placeholder="myildizwork@gmail.com"
+                    placeholder="kumpir@metu.edu.tr"
                     type="email"
                     {...field}
                   />
@@ -84,11 +86,11 @@ export function LoginForm() {
             name="password"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel className="font-bold text-foreground text-xl">Password</FormLabel>
+                <FormLabel className="font-bold text-xl">Password</FormLabel>
                 <FormControl>
                   <Input
                     className="text-lg px-4 py-2 bg-foreground text-background"
-                    placeholder="Password"
+                    placeholder="********"
                     type="password"
                     {...field}
                   />
@@ -97,13 +99,16 @@ export function LoginForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" size={'lg'} className="text-lg bg-foreground text-background hover:bg-accent">
+          {/* <Link href="/forgot-password" className="hover:text-accent">
+            Forgot Password?
+          </Link> */}
+          <Button type="submit" size={'lg'} className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground">
             Login
           </Button>
         </form>
       </Form>
-      <Link href="/register" className="text-foreground hover:text-accent">
-        I do not have account
+      <Link href="/auth/register" className="hover:text-accent">
+        Don't have an account.
       </Link>
     </div>
   );
