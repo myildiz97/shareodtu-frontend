@@ -54,6 +54,8 @@ export function RegisterForm() {
         toast.success('You joined us successfully!');
         form.reset();
         router.push('/auth/login');
+      } else if (response.status === 409) {
+        toast.error('User already registered');
       } else {
         toast.error('Error registering user');
       }
