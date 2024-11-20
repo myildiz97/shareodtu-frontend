@@ -34,6 +34,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 46, 100%, 97%;
     --foreground: 201, 100%, 14%;
@@ -66,7 +67,12 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  input:focus {
+    @apply outline-none border-background shadow-md border-2;
   }
 }

@@ -12,11 +12,17 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const RegisterFormSchema = z.object({
-  fullName: z.string().min(3, 'Full Name should be at least 2 characters.'),
+  fullName: z.string().min(2, 'Full Name should be at least 2 characters.'),
   email: z.string().email({
     message: 'Please enter a valid email.',
+  }).refine((email) => email.endsWith('@metu.edu.tr'), {
+    message: 'Email must be a metu.edu.tr email address.',
   }),
-  password: z.string(),
+  password: z.string().min(1, {
+    message: 'Password is required.',
+  }).min(8, {
+    message: 'Password must be at least 8 characters long.',
+  }),
 });
 
 export function RegisterForm() {

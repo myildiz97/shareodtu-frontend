@@ -15,8 +15,14 @@ import Link from 'next/link';
 const LoginFormSchema = z.object({
   email: z.string().email({
     message: 'Please enter a valid email.',
+  }).refine((email) => email.endsWith('@metu.edu.tr'), {
+    message: 'Email must be a metu.edu.tr email address.',
   }),
-  password: z.string(),
+  password: z.string().min(1, {
+    message: 'Password is required.',
+  }).min(8, {
+    message: 'Password must be at least 8 characters long.',
+  }),
 });
 
 export function LoginForm() {
