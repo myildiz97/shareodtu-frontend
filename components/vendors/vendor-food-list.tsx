@@ -14,10 +14,11 @@ interface IVendorFoodListProps {
 }
 
 const VendorFoodList: React.FunctionComponent<IVendorFoodListProps> = async ({ id }) => {
+  const baseUrl = process.env.NEXT_PUBLIC_SHARE_ODTU_API_URL;
   
   const getVendorFoodList = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/foods/list/${id}`);
+      const response = await fetch(`${baseUrl}/foods/list/${id}`);
       const data = await response.json();
       return data;
     } catch (error) {
@@ -27,7 +28,7 @@ const VendorFoodList: React.FunctionComponent<IVendorFoodListProps> = async ({ i
 
   const getVendor = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/users/${id}`);
+      const response = await fetch(`${baseUrl}/users/${id}`);
       const data = await response.json();
       return data;
     } catch (error) {

@@ -15,8 +15,9 @@ interface IVendorListProps {
 const VendorList: React.FunctionComponent<IVendorListProps> = async () => {
   
   const getVendors = async () => {
+    const baseUrl = process.env.NEXT_PUBLIC_SHARE_ODTU_API_URL;
     try {
-      const response = await fetch('http://localhost:8080/users/vendors');
+      const response = await fetch(`${baseUrl}/users/vendors`);
       const data = await response.json();
       return data;
     } catch (error) {
