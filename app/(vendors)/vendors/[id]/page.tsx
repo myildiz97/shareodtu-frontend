@@ -6,15 +6,14 @@ interface IParams {
 }
 
 interface IVendorPageProps {
-  params: IParams;
+  params: Promise<any> | undefined;
 }
 
 const VendorPage: React.FunctionComponent<IVendorPageProps> = async ({ params }) => {
-  const { id } = await params;
+  const resolvedParams = params ? await Promise.resolve(params) : {};
+  const { id } = resolvedParams as IParams;
 
-  return (
-    <VendorFoodList id={id} />
-  );
+  return <VendorFoodList id={id} />;
 };
 
 export default VendorPage;

@@ -4,17 +4,16 @@ import * as React from 'react';
 interface IParams {
   id: string;
 }
-
 interface IVendorEditPageProps {
-  params: IParams;
+  params: Promise<any> | undefined;
 }
 
 const VendorEditPage: React.FunctionComponent<IVendorEditPageProps> = async ({ params }) => {
-  const { id } = await params;
+  const resolvedParams = params ? await Promise.resolve(params) : {};
+  const { id } = resolvedParams as IParams;
 
-  return (
-    <VendorFoodListEdit id={id} />
-  );
+  return <VendorFoodListEdit id={id} />;
 };
 
 export default VendorEditPage;
+

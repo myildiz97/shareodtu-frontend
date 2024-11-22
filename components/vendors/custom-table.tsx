@@ -27,7 +27,7 @@ interface IVendorFoodTableProps {
 interface ICustomTableProps {
   vendorTable?: IVendorTableProps;
   vendorFoodTable?: IVendorFoodTableProps;
-  action: 'view' | 'edit';
+  action?: 'view' | 'edit';
 }
 
 const CustomTable: React.FunctionComponent<ICustomTableProps> = (props) => {
