@@ -48,12 +48,13 @@ export function RegisterForm() {
       formData.append("email", email);
       formData.append("password", password);
 
-      const response = await fetch('http://localhost:8080/users/create', {
-        method: "POST",
+      const baseURL = process.env.NEXT_PUBLIC_SHARE_ODTU_API_URL;
+      const response = await fetch(`${baseURL}/users/create`, {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: formData.toString(), // Send data as form-urlencoded
+        body: formData.toString(),
       });
 
       if (response.ok) {
