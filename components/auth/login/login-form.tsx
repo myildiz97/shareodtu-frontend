@@ -55,7 +55,7 @@ export function LoginForm() {
 
       toast.success('Welcome back!');
 
-      router.push('/dashboard');
+      router.push('/vendors');
     } catch (error) {
       console.error(error);
       toast.error('Error logging in');
