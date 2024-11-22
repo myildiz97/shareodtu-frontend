@@ -52,6 +52,7 @@ const CustomTable: React.FunctionComponent<ICustomTableProps> = (props) => {
               {(data as IVendorData).vendor.full_name}
             </Link>
           </TableCell>
+          <TableCell className='text-background font-medium text-base text-wrap'>{(data as IVendorData).total_count || 0}</TableCell>
           <TableCell className='text-background font-medium text-base text-wrap'>{(data as IVendorData).vendor.status}</TableCell>
         </TableRow>
       ))}
