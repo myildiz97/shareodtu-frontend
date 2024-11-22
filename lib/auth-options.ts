@@ -25,7 +25,8 @@ export const authOptions: NextAuthOptions = {
         formData.append("password", password);
 
         try {
-          const res = await fetch("http://localhost:8080/login", {
+          const baseUrl = process.env.NEXT_PUBLIC_SHARE_ODTU_API_URL;
+          const res = await fetch(`${baseUrl}/login`, {
             method: "POST",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
@@ -34,7 +35,7 @@ export const authOptions: NextAuthOptions = {
           })
           const { access_token, token_type } = await res.json();
 
-          const resUser = await fetch("http://localhost:8080/users/me", {
+          const resUser = await fetch(`${baseUrl}/users/me`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
