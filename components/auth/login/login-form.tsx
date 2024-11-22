@@ -109,7 +109,7 @@ export function LoginForm() {
             Forgot Password?
           </Link> */}
           <Button type="submit" size={'lg'} className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground">
-            Login
+            Log in
           </Button>
         </form>
       </Form>

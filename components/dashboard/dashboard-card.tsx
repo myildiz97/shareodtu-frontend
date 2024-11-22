@@ -1,8 +1,8 @@
 'use client';
 import { signOut, useSession } from 'next-auth/react';
 import * as React from 'react';
-import { Button } from './ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import toast from 'react-hot-toast';
 
 export default function DashboardCard() {

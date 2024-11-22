@@ -15,7 +15,7 @@ export function LoginCard() {
     <Card className="w-[300px] shadow-md bg-foreground text-background">
       <CardHeader className='p-4'>
         <CardTitle className="flex items-center justify-center gap-x-2">
-          <Image src="/logos/odtü-logo.svg" alt="ODTÜ Logo" width={48} height={48} />
+          <Image src="/logos/odtü-logo.svg" alt="ODTÜ Logo" width={48} height={48} priority />
           <span>Welcome Home</span>
         </CardTitle>
         <CardDescription className='text-center text-lg text-background'>
