@@ -8,6 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import CustomTable from './custom-table';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 interface IVendorListProps {
 }
@@ -28,8 +30,12 @@ const VendorList: React.FunctionComponent<IVendorListProps> = async () => {
   const vendorList = await getVendors();
 
   return (
-    <Card className="w-[300px] p-4 shadow-md bg-foreground text-background">
+    <Card className="w-[300px] p-2 shadow-md bg-foreground text-background">
       <CardHeader className='p-4'>
+        <Link href="/dashboard" className='mr-auto text-blue-400 hover:text-blue-500 text-sm'>
+          <ArrowLeft className='inline-block mr-1' />
+          Go to Dashboard
+        </Link>
         <CardTitle className="flex items-center justify-center gap-x-2 text-3xl">
           Vendor List
         </CardTitle>
