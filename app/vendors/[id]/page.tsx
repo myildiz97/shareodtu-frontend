@@ -1,4 +1,4 @@
-import VendorFoodList from '@/components/vendors/vendor-food-list';
+import VendorFoodList from '@/components/pages/vendors/vendor-food-list';
 import * as React from 'react';
 
 interface IParams {

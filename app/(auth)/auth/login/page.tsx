@@ -2,7 +2,7 @@ import * as React from 'react';
 import { authOptions } from '@/lib/auth-options';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-import { LoginCard } from '@/components/auth/login/login-card';
+import { LoginCard } from '@/components/pages/auth/login/login-card';
 
 async function Login() {
   const session = await getServerSession(authOptions);

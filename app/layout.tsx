@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 import AuthProvider from '@/components/providers/auth-provider';
 import { Toaster } from 'react-hot-toast';
+import Container from '@/components/container/container';
+import { SiteHeader } from '@/components/navbar/site-header';
 // import { Navbar } from '@/components/navbar/navbar';
 
 export const metadata: Metadata = {
@@ -20,7 +22,16 @@ export default function RootLayout({
       <html lang="en">
         <body className={`antialiased`}>
           {/* <Navbar /> */}
-          <main className="w-full min-h-screen flex flex-col items-center justify-center">{children}</main>
+          {/* <SiteHeader />
+          <main className="w-full min-h-screen flex flex-col items-center justify-center">
+            <Container>
+              {children}
+            </Container>
+          </main> */}
+          <Container className="relative flex flex-col mx-auto min-h-screen">
+            <SiteHeader />
+            <main className="flex flex-1">{children}</main>
+          </Container>
           <Toaster />
         </body>
       </html>

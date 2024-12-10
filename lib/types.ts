@@ -31,3 +31,9 @@ export interface IFoodData {
   food_type: string;
   vendor_name: string;
 }
+
+export interface UserSettings {
+  fullName: string;
+  isVendor: boolean;
+  isOpen?: boolean;
+}

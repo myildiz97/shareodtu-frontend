@@ -1,5 +1,6 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { cookies } from 'next/headers';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -44,6 +45,9 @@ export const authOptions: NextAuthOptions = {
           });
           const user = await resUser.json();
           if (resUser.ok && user) {
+            (await cookies()).set('session', access_token, {
+              maxAge: 30 * 24 * 60 * 60, // 30 days
+            });
             return user;
           }
 
@@ -77,6 +81,11 @@ export const authOptions: NextAuthOptions = {
         session.user.disabled = token.disabled as boolean;
       }
       return session;
+    },
+  },
+  events: {
+    signOut: async () => {
+      (await cookies()).delete('session');
     },
   },
 };

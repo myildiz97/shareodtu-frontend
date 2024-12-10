@@ -1,4 +1,4 @@
-import VendorList from '@/components/vendors/vendor-list';
+import VendorList from '@/components/pages/vendors/vendor-list';
 import * as React from 'react';
 
 interface IVendorsPageProps {

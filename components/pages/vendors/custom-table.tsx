@@ -12,7 +12,7 @@ import {
 import { IFoodData, IVendorData } from '@/lib/types';
 import Link from 'next/link';
 import CustomButton from './custom-button';
-import { Input } from '../ui/input';
+import { Input } from '@/components/ui/input';
 
 interface IVendorTableProps {
   tableHeaders: string[];
