@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button"
 import { signOut, useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
 export function UserNav() {
   const { data: session } = useSession();
@@ -25,7 +24,6 @@ export function UserNav() {
     setTimeout(async () => {
       await signOut();
     }, 1000);
-    redirect('/');
   };
 
   return (
