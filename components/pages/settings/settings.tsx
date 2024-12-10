@@ -17,6 +17,8 @@ export default async function Settings() {
 
   const userSettings: UserSettings = {
     fullName: me.full_name,
+    currentPassword: '',
+    newPassword: '',
     isVendor: me.user_type === EUserType.VENDOR,
     isOpen: me.status === EUserStatus.OPEN,
   }

@@ -1,13 +1,25 @@
 'use server'
 
-import { UserSettings } from '@/lib/types'
+import { makeRequest } from '@/lib/make-request'
+import { EUserStatus, UserSettings } from '@/lib/types'
+
+interface IUpdateUser {
+  full_name?: string;
+  current_password?: string;
+  new_password?: string;
+  status?: EUserStatus;
+}
 
 export async function updateUserSettings(data: UserSettings) {
-  // Simulate a delay
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  const reqData: IUpdateUser = {};
+  if (data.fullName) reqData['full_name'] = data.fullName;
+  if (data.currentPassword && data.newPassword) {
+    reqData['current_password'] = data.currentPassword;
+    reqData['new_password'] = data.newPassword;
+  }
+  if (data.isVendor) reqData['status'] = data.isOpen ? EUserStatus.OPEN : EUserStatus.CLOSED;
 
-  // Here you would typically update the user settings in your database
-  console.log('Updating user settings:', data)
+  await makeRequest('/users/me', "PUT", reqData);
 
   // Simulate a successful update
   return { success: true, message: 'Settings updated successfully' }

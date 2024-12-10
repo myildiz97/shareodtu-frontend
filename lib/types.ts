@@ -34,6 +34,8 @@ export interface IFoodData {
 
 export interface UserSettings {
   fullName: string;
+  currentPassword: string;
+  newPassword: string;
   isVendor: boolean;
   isOpen?: boolean;
 }

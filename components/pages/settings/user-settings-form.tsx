@@ -12,7 +12,7 @@ interface UserSettingsFormProps {
 }
 
 export function UserSettingsForm({ initialData }: UserSettingsFormProps) {
-  const { form, isSubmitting, submitError, submitSuccess, onSubmit } = useUserSettingsForm(initialData)
+  const { form, isSubmitting, onSubmit } = useUserSettingsForm(initialData)
 
   return (
     <Form {...form}>
@@ -63,6 +63,7 @@ export function UserSettingsForm({ initialData }: UserSettingsFormProps) {
               <FormField
                 control={form.control}
                 name="isOpen"
+                defaultValue={initialData.isOpen}
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
@@ -82,9 +83,7 @@ export function UserSettingsForm({ initialData }: UserSettingsFormProps) {
               />
             </div>
           )}
-        {submitError && <p className="text-sm font-medium text-destructive">{submitError}</p>}
-        {submitSuccess && <p className="text-sm font-medium text-green-600">{submitSuccess}</p>}
-        <Button type="submit" className='max-w-fit ml-auto' disabled={isSubmitting}>
+        <Button type="submit" className='max-w-fit ml-auto' disabled={isSubmitting || !form.formState.isValid || !form.formState.isDirty}>
           {isSubmitting ? 'Updating...' : 'Update Settings'}
         </Button>
       </form>

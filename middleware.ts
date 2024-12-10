@@ -32,4 +32,4 @@ export default withAuth(
   },
 );
 
-export const config = { matcher: ['/dashboard', '/vendors/:path*'] };
+export const config = { matcher: ['/dashboard', '/vendors/:path*', '/settings/:path'] };

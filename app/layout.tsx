@@ -21,16 +21,11 @@ export default function RootLayout({
     <AuthProvider>
       <html lang="en">
         <body className={`antialiased`}>
-          {/* <Navbar /> */}
-          {/* <SiteHeader />
-          <main className="w-full min-h-screen flex flex-col items-center justify-center">
-            <Container>
-              {children}
-            </Container>
-          </main> */}
           <Container className="relative flex flex-col mx-auto min-h-screen">
-            <SiteHeader />
-            <main className="flex flex-1">{children}</main>
+            {/* <SiteHeader /> */}
+            {/* <main className="flex flex-1"> */}
+              {children}
+            {/* </main> */}
           </Container>
           <Toaster />
         </body>

@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { UserSettings } from '@/lib/types'
 import { updateUserSettings } from './update-user-settings'
+import toast from 'react-hot-toast'
 
 const formSchema = z.object({
   fullName: z.string().min(2).or(z.literal('')),
@@ -88,11 +89,14 @@ export function useUserSettingsForm(initialData: UserSettings) {
       const result = await updateUserSettings({ ...data, isVendor: initialData.isVendor })
       if (result.success) {
         setSubmitSuccess(result.message)
+        toast.success(result.message)
       } else {
         setSubmitError('Failed to update settings')
+        toast.error(result.message)
       }
     } catch (error) {
       setSubmitError('An error occurred while updating settings')
+      toast.error('An error occurred while updating settings')
     } finally {
       setIsSubmitting(false)
     }
