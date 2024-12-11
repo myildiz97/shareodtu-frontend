@@ -19,7 +19,12 @@ export async function updateUserSettings(data: UserSettings) {
   }
   if (data.isVendor) reqData['status'] = data.isOpen ? EUserStatus.OPEN : EUserStatus.CLOSED;
 
-  await makeRequest('/users/me', "PUT", reqData);
+  try {
+    await makeRequest('/users/me', "PUT", reqData);
+  } catch (error) {
+    console.error('Error updating user settings:', error);
+    return { success: false, message: 'Failed to update settings' }
+  }
 
   // Simulate a successful update
   return { success: true, message: 'Settings updated successfully' }

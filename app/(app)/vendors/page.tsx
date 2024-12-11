@@ -1,10 +1,12 @@
-import VendorList from '@/components/pages/vendors/vendor-list';
+import VendorList from '@/components/pages/vendors/vendor-list/vendor-list';
 import * as React from 'react';
 
 interface IVendorsPageProps {
 }
 
-const VendorsPage: React.FunctionComponent<IVendorsPageProps> = (props) => {
+export const dynamic = 'force-dynamic';
+
+const VendorsPage: React.FunctionComponent<IVendorsPageProps> = async () => {
   return <VendorList />;
 };
 

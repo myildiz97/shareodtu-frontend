@@ -5,6 +5,7 @@ import AuthProvider from '@/components/providers/auth-provider';
 import { Toaster } from 'react-hot-toast';
 import Container from '@/components/container/container';
 import { SiteHeader } from '@/components/navbar/site-header';
+import { NextUIProvider } from '@nextui-org/system';
 // import { Navbar } from '@/components/navbar/navbar';
 
 export const metadata: Metadata = {
@@ -21,13 +22,15 @@ export default function RootLayout({
     <AuthProvider>
       <html lang="en">
         <body className={`antialiased`}>
-          <Container className="relative flex flex-col mx-auto min-h-screen">
-            {/* <SiteHeader /> */}
-            {/* <main className="flex flex-1"> */}
-              {children}
-            {/* </main> */}
-          </Container>
-          <Toaster />
+          <NextUIProvider>
+            <Container className="relative flex flex-col mx-auto min-h-screen">
+              {/* <SiteHeader /> */}
+              {/* <main className="flex flex-1"> */}
+                {children}
+              {/* </main> */}
+            </Container>
+            <Toaster />
+          </NextUIProvider>
         </body>
       </html>
     </AuthProvider>

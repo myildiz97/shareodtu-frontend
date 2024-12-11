@@ -1,8 +1,7 @@
-import DashboardCard from '@/components/pages/dashboard/dashboard-card';
+export const dynamic = 'force-dynamic';
 
-export default function Dashboard() {
+export default async function Dashboard() {
   return (
-    <DashboardCard />
-    // null
+    <div>Dashboard</div>
   );
 }

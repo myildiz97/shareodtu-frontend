@@ -40,7 +40,6 @@ const CustomTable: React.FunctionComponent<ICustomTableProps> = (props) => {
   const [newFoodCount, setNewFoodCount] = React.useState(0);
 
   const handleNewFood = () => {
-    console.log(newFoodType, newFoodCount);
   }
 
   const body = vendorTable ? (

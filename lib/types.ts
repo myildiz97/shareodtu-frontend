@@ -32,6 +32,11 @@ export interface IFoodData {
   vendor_name: string;
 }
 
+export interface IUpdateFoodData {
+  count?: number;
+  food_name?: string;
+}
+
 export interface UserSettings {
   fullName: string;
   currentPassword: string;
