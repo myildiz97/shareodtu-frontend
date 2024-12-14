@@ -3,6 +3,7 @@ import { VendorDetailTable } from './vendor-detail-table';
 import { EUserType, IFoodData, IUser } from '@/lib/types';
 import { redirect } from 'next/navigation';
 import { makeRequest } from '@/lib/make-request';
+import { VerificationCard } from './verification-card';
 
 interface IVendorFoodListProps {
   id: string;
@@ -51,7 +52,14 @@ const VendorFoodList: React.FunctionComponent<IVendorFoodListProps> = async ({ i
   }
 
   return (
-    <VendorDetailTable vendorName={vendor.full_name} foodData={vendorFoodList} action={action} />
+    <> 
+    {
+      me.user_type === EUserType.VENDOR && (
+        <VerificationCard foodData={vendorFoodList} />
+      )
+    }
+      <VendorDetailTable vendorId={vendor._id} vendorName={vendor.full_name} foodData={vendorFoodList} action={action} />
+    </>
   )
 };
 

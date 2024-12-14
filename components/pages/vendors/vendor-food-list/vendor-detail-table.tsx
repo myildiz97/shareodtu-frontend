@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   Table,
   TableBody,
@@ -20,20 +20,28 @@ import {
 } from "@/components/ui/tooltip"
 import { Input } from '@/components/ui/input';
 import { addNewFood, deleteFood, updateFood } from '@/lib/actions/vendors/food-actions';
+import { makeRequest } from '@/lib/make-request';
+import toast from 'react-hot-toast';
+import { CollectDialog } from './collect-dialog';
 
 interface IVendorDetailTable {
+  vendorId: string;
   vendorName: string;
   foodData: IFoodData[];
   action: 'view' | 'edit';
 }
 
-export function VendorDetailTable({ vendorName, foodData, action }: IVendorDetailTable) {
+export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IVendorDetailTable) {
   const [data, setData] = useState(foodData)
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null)
 
+  const [selectedFood, setSelectedFood] = useState<string | null>(null)
   const [editingFood, setEditingFood] = useState<string | null>(null)
   const [editValue, setEditValue] = useState<number>(0)
   const [editFoodName, setEditFoodName] = useState<string>("")
+
+  const [collectionCode, setCollectionCode] = useState<string>("")
+  const [open, setOpen] = useState<boolean>(false)
 
   const [newFood, setNewFood] = useState<IFoodData>({ food_type: "", count: 0, vendor_name: vendorName })
 
@@ -81,8 +89,37 @@ export function VendorDetailTable({ vendorName, foodData, action }: IVendorDetai
     setEditFoodName("")
   }, [newFood])
 
+  useEffect(() => {
+    collectionCode && setOpen(true)
+  }, [collectionCode])
+    
+
+  const handleTakeFood = useCallback(async (foodName: string) => {
+    console.log(`Taking food: ${foodName} - ${vendorName} - ${vendorId}`)
+    setSelectedFood(foodName);
+    try {
+      const data = await makeRequest('/foods/collect', 'POST', { food_type: foodName, vendor_id: vendorId }) as any;
+      setCollectionCode(data.collection_code);
+      toast.success('Show this code to the vendor to take your food');
+    } catch (error) {
+      console.error('Error taking food', error);
+      toast.error('Error taking food');
+    }
+  }, [])
+
   return (
     <div className="w-[96%] xl:w-full mx-auto bg-foreground shadow-2xl rounded-lg overflow-hidden mt-4 p-4">
+      {
+        selectedFood && (
+          <CollectDialog 
+            open={open} 
+            setOpen={setOpen} 
+            foodName={selectedFood} 
+            onTake={handleTakeFood}
+            code={collectionCode}
+          />
+        )
+      }
       <div className="pb-4 border-b sm:flex sm:flex-col sm:items-start sm:gap-x-4">
         <h1 className="text-3xl font-bold text-center sm:text-start text-background">
           {
@@ -265,9 +302,9 @@ export function VendorDetailTable({ vendorName, foodData, action }: IVendorDetai
                       {food.count}
                     </TableCell>
                     <TableCell>
-                      <Button variant="outline" size="sm" className="text-foreground hover:bg-accent">
+                      <Button variant="outline" size="sm" className="text-foreground hover:bg-accent" onClick={() => handleTakeFood(food.food_type)}>
                         Take
-                      </Button>
+                      </Button>                    
                     </TableCell>
                   </TableRow>
                 ))
