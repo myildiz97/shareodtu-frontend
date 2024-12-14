@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card"
 import { LoginForm } from './login-form'
 import Image from 'next/image'
+import { VerificationDialog } from './verification-dialog'
 
 export function LoginCard() {
   return (

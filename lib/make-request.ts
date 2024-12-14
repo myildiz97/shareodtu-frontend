@@ -46,7 +46,35 @@ export async function makeRequest<T>(
 
     return response.data;
   } catch (error: any) {
-    console.error('API Request Error:', error.response || error.message);
-    throw error.response?.data || error.message;
+    if (axios.isAxiosError(error)) {
+      // Handle Axios errors (server or network related)
+      const status = error.response?.status;
+      const errorMessage = error.response?.data?.detail || error.message;
+
+      console.error("API Request Error:", {
+        method,
+        url: `${baseURL}${endpoint}`,
+        status,
+        message: errorMessage,
+        data: error.response?.data,
+      });
+
+      // Throw a structured error object
+      // throw {
+      //   status: status || 500,
+      //   message: errorMessage || "An unexpected error occurred",
+      //   data: error.response?.data || null,
+      // };
+      throw new Error(errorMessage);
+    } else {
+      // Handle unknown errors
+      console.error("Unexpected Error:", error);
+
+      throw {
+        status: 500,
+        message: "A network error occurred",
+        data: null,
+      };
+    }
   }
 }

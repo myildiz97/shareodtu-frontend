@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import { VerificationDialog } from './verification-dialog';
 
 const LoginFormSchema = z.object({
   email: z.string().email({
@@ -27,6 +28,7 @@ const LoginFormSchema = z.object({
 
 export function LoginForm() {
   const router = useRouter();
+  const [verificationDialogOpen, setVerificationDialogOpen] = React.useState(false);
 
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
@@ -48,6 +50,14 @@ export function LoginForm() {
         redirect: false,
       });
 
+
+      if (authRes?.error === 'NOT_VERIFIED') {
+        toast.error('Please verify your account');
+        setVerificationDialogOpen(true);
+        return;
+      }
+
+
       if (authRes?.error) {
         toast.error('Invalid Credentials');
         return;
@@ -56,7 +66,7 @@ export function LoginForm() {
       toast.success('Welcome back!');
 
       router.push('/vendors');
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       toast.error('Error logging in');
     }
@@ -64,6 +74,11 @@ export function LoginForm() {
 
   return (
     <div className="w-full flex flex-col items-center justify-center gap-y-4">
+      <VerificationDialog 
+        open={verificationDialogOpen} 
+        setOpen={setVerificationDialogOpen}
+        email={form.getValues('email')} 
+      />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

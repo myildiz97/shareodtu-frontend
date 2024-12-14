@@ -58,7 +58,7 @@ export function RegisterForm() {
       });
 
       if (response.ok) {
-        toast.success('You joined us successfully!');
+        toast.success('Verification email sent! Check your inbox.');
         form.reset();
         router.push('/auth/login');
       } else if (response.status === 409) {

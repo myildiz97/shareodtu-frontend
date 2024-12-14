@@ -34,7 +34,17 @@ export const authOptions: NextAuthOptions = {
             },
             body: formData.toString(), // Send data as form-urlencoded
           })
-          const { access_token, token_type } = await res.json();
+
+          if (res.status === 406) {
+            throw new Error("NOT_VERIFIED");
+          }
+
+          if (!res.ok) {
+            return null; // For other errors like 401
+          }
+
+          const data = await res.json();
+          const { access_token, token_type } = data;
 
           const resUser = await fetch(`${baseUrl}/users/me`, {
             method: "GET",
@@ -52,8 +62,13 @@ export const authOptions: NextAuthOptions = {
           }
 
           return null;
-        } catch (error) {
-          console.error(error);
+        } catch (error: any) {
+          // console.error(error);
+          // return null;
+          if (error.message === "NOT_VERIFIED") {
+            throw new Error("NOT_VERIFIED");
+          }
+          console.error("Authentication error:", error);
           return null;
         }
       },

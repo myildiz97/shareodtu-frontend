@@ -40,12 +40,12 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
+          {/* <DropdownMenuItem asChild>
             <Link href="/profile" className='flex'>
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </Link>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem asChild>
             <Link href="/settings" className='flex'>
               <Settings className="mr-2 h-4 w-4" />
