@@ -49,13 +49,13 @@ export function OTPForm({ email, setOpen }: { email: string; setOpen: (open: boo
     } catch (error: any) {
       const errorMessage = error.toString().split(":")[1].trim();
       if (errorMessage === 'Verification code has expired') {
-        toast.error(errorMessage);
+        toast.error('Verification code has expired! New code will be sent to your email in a few seconds...');
         setTimeout(async () => {
           await makeRequest(`/send_verification_email/${email}`, "POST", { email });
           toast.success("New verification code sent to your email");
         }, 3000);
       } else {
-        toast.error(errorMessage);
+        toast.error('Invalid verification code');
       }
     }
   }
