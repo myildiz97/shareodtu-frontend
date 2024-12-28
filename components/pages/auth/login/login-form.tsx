@@ -16,8 +16,6 @@ import { VerificationDialog } from './verification-dialog';
 const LoginFormSchema = z.object({
   email: z.string().email({
     message: 'Please enter a valid email.',
-  }).refine((email) => email.endsWith('@metu.edu.tr'), {
-    message: 'Email must be a metu.edu.tr email address.',
   }),
   password: z.string().min(1, {
     message: 'Password is required.',
