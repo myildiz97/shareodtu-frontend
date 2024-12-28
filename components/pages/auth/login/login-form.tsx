@@ -127,7 +127,10 @@ export function LoginForm() {
         </form>
       </Form>
       <Link href="/auth/register" className="hover:text-accent">
-        Don't have an account.
+        Register
+      </Link>
+      <Link href="/auth/vendor-register" className="hover:text-accent">
+        Register as a vendor
       </Link>
     </div>
   );
