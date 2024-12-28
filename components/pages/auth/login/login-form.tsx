@@ -48,11 +48,25 @@ export function LoginForm() {
         redirect: false,
       });
 
+      const formData = new URLSearchParams();
+      formData.append("email", email);
+
+      const baseURL = process.env.NEXT_PUBLIC_SHARE_ODTU_API_URL;
+      const response = await fetch(`${baseURL}/users/type/${email}`, {
+        method: 'GET'});
+      const userType = await response.json();
+
 
       if (authRes?.error === 'NOT_VERIFIED') {
-        toast.error('Please verify your account');
-        setVerificationDialogOpen(true);
-        return;
+        if (userType === 'vendor') {
+          toast.error('Please wait for approval');
+          return;
+        }
+        else {
+          toast.error('Please verify your account');
+          setVerificationDialogOpen(true);
+          return;
+        }
       }
 
 
