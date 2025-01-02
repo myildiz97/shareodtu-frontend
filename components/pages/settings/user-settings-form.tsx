@@ -83,7 +83,11 @@ export function UserSettingsForm({ initialData }: UserSettingsFormProps) {
               />
             </div>
           )}
-        <Button type="submit" className='max-w-fit ml-auto' disabled={isSubmitting || !form.formState.isValid || !form.formState.isDirty}>
+        <Button 
+          type="submit" 
+          className='max-w-fit ml-auto opacity-80 hover:opacity-100 hover:bg-primary hover:text-foreground' 
+          disabled={isSubmitting || !form.formState.isValid || !form.formState.isDirty}
+        >
           {isSubmitting ? 'Updating...' : 'Update Settings'}
         </Button>
       </form>

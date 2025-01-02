@@ -1,6 +1,6 @@
 "use client"
 
-import { LogOut, Settings, User } from 'lucide-react'
+import { Loader, LogOut, Settings, User } from 'lucide-react'
 
 import {
   DropdownMenu,
@@ -15,14 +15,19 @@ import { Button } from "@/components/ui/button"
 import { signOut, useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export function UserNav() {
   const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
+  
 
   const handleLogout = async () => {
+    setIsLoading(true);
     toast.success('See you soon!');
     setTimeout(async () => {
       await signOut();
+      setIsLoading(false);
     }, 1000);
   };
 
@@ -54,9 +59,18 @@ export function UserNav() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
+        <DropdownMenuItem 
+          onClick={handleLogout}
+          disabled={isLoading}
+        >
           <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+          {
+            isLoading ? (
+              <Loader className="h-4 w-4 animate-spin" />
+            ): (
+              <span>Log out</span>
+            )
+          }
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

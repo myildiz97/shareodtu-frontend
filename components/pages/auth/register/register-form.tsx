@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Loader } from 'lucide-react';
 
 const RegisterFormSchema = z.object({
   fullName: z.string().min(2, 'Full Name should be at least 2 characters.'),
@@ -27,6 +28,8 @@ const RegisterFormSchema = z.object({
 
 export function RegisterForm() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = React.useState(false);
+  
 
   const form = useForm<z.infer<typeof RegisterFormSchema>>({
     resolver: zodResolver(RegisterFormSchema),
@@ -39,6 +42,7 @@ export function RegisterForm() {
 
   async function onSubmit(data: z.infer<typeof RegisterFormSchema>) {
     // console.log(data);
+    setIsLoading(true);
 
     const { fullName, email, password } = data;
 
@@ -63,12 +67,15 @@ export function RegisterForm() {
         router.push('/auth/login');
       } else if (response.status === 409) {
         toast.error('User already registered');
+        setIsLoading(false);
       } else {
         toast.error('Error registering user');
+        setIsLoading(false);
       }
     } catch (error) {
       console.error(error);
       toast.error('Error registering user');
+      setIsLoading(false);
     }
   }
 
@@ -128,8 +135,19 @@ export function RegisterForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" size={'lg'} className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground">
-            Register
+          <Button 
+            type="submit" 
+            size={'lg'} 
+            className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground"
+            disabled={isLoading}
+          >
+            {
+              isLoading ? (
+                <Loader size={24} className='animate-spin' />
+              ): (
+                'Register'
+              )
+            }
           </Button>
         </form>
       </Form>
