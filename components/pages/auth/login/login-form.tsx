@@ -53,15 +53,12 @@ export function LoginForm() {
         redirect: false,
       });
 
-
       if (authRes?.error === 'NOT_VERIFIED') {
         toast.error('Please verify your account');
         setVerificationDialogOpen(true);
         setIsLoading(false);
-
         return;
       }
-
 
       if (authRes?.error) {
         toast.error('Invalid Credentials');
@@ -84,7 +81,9 @@ export function LoginForm() {
       <VerificationDialog 
         open={verificationDialogOpen} 
         setOpen={setVerificationDialogOpen}
-        email={form.getValues('email')} 
+        email={form.getValues('email')}
+        password={form.getValues('password')}
+        setIsLoggingIn={setIsLoading}
       />
       <Form {...form}>
         <form
