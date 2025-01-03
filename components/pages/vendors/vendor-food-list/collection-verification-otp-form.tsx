@@ -41,7 +41,7 @@ export function CollectionVerificationOTPForm({ foodData }: { foodData: IFoodDat
     resolver: zodResolver(FormSchema),
     defaultValues: {
       pin: "",
-      foodType: foodData[0].food_type,
+      foodType: foodData?.[0]?.food_type || "",
     },
   })
 
