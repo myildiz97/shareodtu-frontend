@@ -12,7 +12,7 @@ import { VendorRegisterForm } from './vendor-register-form'
 
 export function RegisterCard() {
   return (
-    <Card className="w-[300px] shadow-md bg-foreground text-background">
+    <Card className="w-[300px] md:w-[720px] shadow-md bg-foreground text-background">
       <CardHeader className='p-4'>
         <CardTitle className="flex items-center justify-center gap-x-2">
           <Image src="/logos/odtu-logo.svg" alt="ODTU Logo" width={48} height={48} />

@@ -95,7 +95,7 @@ export function VendorRegisterForm() {
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="w-full flex flex-col justify-center items-center gap-y-4"
+                    className="w-full flex flex-col justify-center items-center gap-y-4 md:grid sm:grid-cols-2 md:gap-x-4"
                 >
                     <FormField
                         control={form.control}
@@ -237,7 +237,7 @@ export function VendorRegisterForm() {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" size={'lg'} className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground">
+                    <Button type="submit" size={'lg'} className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground col-span-2 mx-auto w-1/2">
                         Register
                     </Button>
                 </form>
