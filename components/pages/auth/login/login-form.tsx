@@ -49,6 +49,11 @@ export function LoginForm() {
         email,
         password,
         redirect: false,
+      }).catch(error => {
+        console.error('Error during sign-in:', error);
+        toast.error('Error during sign-in');
+        setIsLoading(false);
+        return null;
       });
 
       const formData = new URLSearchParams();

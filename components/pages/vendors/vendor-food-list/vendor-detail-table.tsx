@@ -34,6 +34,8 @@ interface IVendorDetailTable {
 
 export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IVendorDetailTable) {
   const [saving, setSaving] = useState<boolean>(false)
+  const [adding, setAdding] = useState<boolean>(false)
+  const [deleting, setDeleting] = useState<boolean>(false)
 
   const [data, setData] = useState(foodData)
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null)
@@ -71,6 +73,7 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
     if (editValue >= 0 && updatedData.count !== editValue) updatedFood.count = editValue
     if (Object.keys(updatedFood).length === 0) return;
     await updateFood(foodName, updatedFood);
+    toast.success(`${foodName} updated successfully`);
     setSaving(false)
     window.location.reload();
     setEditingFood(null)
@@ -81,13 +84,23 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
   }, [])
 
   const handleDelete = useCallback(async (foodName: string) => {
+    setDeleting(true)
     await deleteFood(foodName);
+    toast.success(`${foodName} deleted successfully`);
+    setDeleting(false)
     window.location.reload();
   }, [])
 
   const handleAddNewFood = useCallback(async () => {
-    if (!(newFood.food_type && newFood.count > 0)) return;
+    setAdding(true)
+    if (!(newFood.food_type && newFood.count > 0)) {
+      toast.error('Please provide a valid food name and count');
+      setAdding(false);
+      return;
+    }
     await addNewFood(newFood);
+    toast.success(`${newFood.food_type} added successfully`);
+    setAdding(false);
     window.location.reload();
     setEditingFood(null)
     setEditValue(0)
@@ -257,8 +270,15 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
                                 size="icon"
                                 className="h-8 w-8 text-red-600 hover:text-red-700 hover:border-red-700"
                                 onClick={() => handleDelete(food.food_type)}
+                                disabled={deleting}
                               >
-                                <Trash2 className="h-4 w-4" />
+                                {
+                                  deleting ? (
+                                    <Loader className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <Trash2 className="h-4 w-4" />
+                                  )
+                                }
                               </Button>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -302,8 +322,15 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
                           size="icon"
                           className="h-8 w-8 text-green-600 hover:text-green-700 hover:border-green-700"
                           onClick={handleAddNewFood}
+                          disabled={adding}
                         >
-                          <Plus className="h-4 w-4" />
+                          {
+                            adding ? (
+                              <Loader className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Plus className="h-4 w-4" />
+                            )
+                          }
                         </Button>
                       </TooltipTrigger>
                       <TooltipContent>

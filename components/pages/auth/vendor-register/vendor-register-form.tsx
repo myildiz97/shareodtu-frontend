@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Loader } from 'lucide-react';
 
 const MAX_FILE_SIZE = 500000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -39,6 +40,8 @@ const VendorRegisterFormSchema = z.object({
 });
 
 export function VendorRegisterForm() {
+    const [isLoading, setIsLoading] = React.useState(false);
+    
     const router = useRouter();
 
     const form = useForm<z.infer<typeof VendorRegisterFormSchema>>({
@@ -56,6 +59,7 @@ export function VendorRegisterForm() {
     });
 
     async function onSubmit(data: z.infer<typeof VendorRegisterFormSchema>) {
+        setIsLoading(true);
         const { fullName, email, password, vendorAddress, facilityName, vendorPhone, vendorIdentityNo, image } = data;
 
         try {
@@ -81,12 +85,15 @@ export function VendorRegisterForm() {
                 router.push('/auth/login');
             } else if (response.status === 409) {
                 toast.error('User already registered');
+                setIsLoading(false);
             } else {
                 toast.error('Error registering user');
+                setIsLoading(false);
             }
         } catch (error) {
             console.error(error);
             toast.error('Error registering user');
+            setIsLoading(false);
         }
     }
 
@@ -237,8 +244,19 @@ export function VendorRegisterForm() {
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" size={'lg'} className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground col-span-2 mx-auto w-1/2">
-                        Register
+                    <Button 
+                        type="submit" 
+                        size={'lg'} 
+                        className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground col-span-2 mx-auto w-1/2"
+                        disabled={isLoading}
+                    >
+                        {
+                            isLoading ? (
+                                <Loader size={24} className='animate-spin' />
+                            ): (
+                                'Register'
+                            )
+                        }
                     </Button>
                 </form>
             </Form>
