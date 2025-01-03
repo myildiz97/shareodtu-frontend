@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import Container from '@/components/container/container';
 import { SiteHeader } from '@/components/navbar/site-header';
 import { NextUIProvider } from '@nextui-org/system';
+import { MantineProvider } from '@mantine/core';
 // import { Navbar } from '@/components/navbar/navbar';
 
 export const metadata: Metadata = {
@@ -23,13 +24,15 @@ export default function RootLayout({
       <html lang="en">
         <body className={`antialiased`}>
           <NextUIProvider>
-            <Container className="relative flex flex-col mx-auto min-h-screen">
-              {/* <SiteHeader /> */}
-              {/* <main className="flex flex-1"> */}
-                {children}
-              {/* </main> */}
-            </Container>
-            <Toaster />
+            <MantineProvider>
+              <Container className="relative flex flex-col mx-auto min-h-screen">
+                {/* <SiteHeader /> */}
+                {/* <main className="flex flex-1"> */}
+                  {children}
+                {/* </main> */}
+              </Container>
+              <Toaster />
+            </MantineProvider>
           </NextUIProvider>
         </body>
       </html>

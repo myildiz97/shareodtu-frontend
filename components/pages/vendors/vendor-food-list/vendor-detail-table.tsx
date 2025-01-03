@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react"
+import { NumberInput } from '@mantine/core';
 import {
   Table,
   TableBody,
@@ -67,7 +68,7 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
     if (!updatedData) return;
     const updatedFood: IUpdateFoodData = {}
     if (editFoodName && foodName !== editFoodName) updatedFood.food_name = editFoodName
-    if (updatedData.count !== editValue) updatedFood.count = editValue
+    if (editValue >= 0 && updatedData.count !== editValue) updatedFood.count = editValue
     if (Object.keys(updatedFood).length === 0) return;
     await updateFood(foodName, updatedFood);
     setSaving(false)
@@ -170,12 +171,19 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
                     <TableCell>
                       {editingFood === food.food_type ? (
                         <div className="flex items-center space-x-2">
-                          <Input
+                          <NumberInput
+                            allowNegative={false}
+                            value={editValue}
+                            onChange={(value) => setEditValue(Number(value))}
+                            className="h-9 w-fit rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          />
+
+                          {/* <Input
                             type="number"
                             value={editValue}
                             onChange={(e) => setEditValue(Number(e.target.value))}
                             className="w-20"
-                          />
+                          /> */}
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -272,12 +280,18 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
                   />
                 </TableCell>
                 <TableCell>
-                  <Input
+                  <NumberInput
+                    allowNegative={false}
+                    value={newFood.count}
+                    onChange={(value) => setNewFood({ ...newFood, count: Number(value) })}
+                    className="h-9 w-fit rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                  {/* <Input
                     type="number"
                     placeholder="Food count"
                     value={newFood.count}
                     onChange={(e) => setNewFood({ ...newFood, count: Number(e.target.value) })}
-                  />
+                  /> */}
                 </TableCell>
                 <TableCell>
                   <TooltipProvider>
@@ -312,7 +326,13 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
                       {food.count}
                     </TableCell>
                     <TableCell>
-                      <Button variant="outline" size="sm" className="text-foreground hover:bg-accent" onClick={() => handleTakeFood(food.food_type)}>
+                      <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-foreground hover:bg-accent" 
+                      onClick={() => handleTakeFood(food.food_type)}
+                      disabled={food.count === 0}
+                    >
                         Take
                       </Button>                    
                     </TableCell>
