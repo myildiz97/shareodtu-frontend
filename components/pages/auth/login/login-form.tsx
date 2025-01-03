@@ -17,8 +17,6 @@ import { Loader } from 'lucide-react';
 const LoginFormSchema = z.object({
   email: z.string().email({
     message: 'Please enter a valid email.',
-  }).refine((email) => email.endsWith('@metu.edu.tr'), {
-    message: 'Email must be a metu.edu.tr email address.',
   }),
   password: z.string().min(1, {
     message: 'Password is required.',
@@ -51,13 +49,32 @@ export function LoginForm() {
         email,
         password,
         redirect: false,
+      }).catch(error => {
+        console.error('Error during sign-in:', error);
+        toast.error('Error during sign-in');
+        setIsLoading(false);
+        return null;
       });
 
+      const formData = new URLSearchParams();
+      formData.append("email", email);
+
+      const baseURL = process.env.NEXT_PUBLIC_SHARE_ODTU_API_URL;
+      const response = await fetch(`${baseURL}/users/type/${email}`, {
+        method: 'GET'});
+      const userType = await response.json();
+
+
       if (authRes?.error === 'NOT_VERIFIED') {
-        toast.error('Please verify your account');
-        setVerificationDialogOpen(true);
-        setIsLoading(false);
-        return;
+        if (userType === 'vendor') {
+          toast.error('Please wait for approval');
+          return;
+        }
+        else {
+          toast.error('Please verify your account');
+          setVerificationDialogOpen(true);
+          return;
+        }
       }
 
       if (authRes?.error) {
@@ -146,7 +163,10 @@ export function LoginForm() {
         </form>
       </Form>
       <Link href="/auth/register" className="hover:text-accent">
-        Don't have an account.
+        Register
+      </Link>
+      <Link href="/auth/vendor-register" className="hover:text-accent">
+        Register as a vendor
       </Link>
     </div>
   );

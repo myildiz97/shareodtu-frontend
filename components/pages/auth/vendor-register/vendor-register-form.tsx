@@ -10,6 +10,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Loader } from 'lucide-react';
+
+const MAX_FILE_SIZE = 500000;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 const VendorRegisterFormSchema = z.object({
     fullName: z.string().min(2, 'Full Name should be at least 2 characters.'),
@@ -25,44 +29,54 @@ const VendorRegisterFormSchema = z.object({
     facilityName: z.string().min(1, 'Facility Name is required.'),
     vendorPhone: z.string().min(10, 'Enter a valid phone number.'),
     vendorIdentityNo: z.string().min(11, 'Enter a valid identity number.'),
+    image: z
+    .instanceof(File)
+    .refine((file) => file.size !== 0, "Please upload an image")
+    .refine((file) => file.size <= MAX_FILE_SIZE, `Max file size is 5MB.`)
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+      ".jpg, .jpeg, .png and .webp files are accepted."
+    ),
 });
 
 export function VendorRegisterForm() {
+    const [isLoading, setIsLoading] = React.useState(false);
+    
     const router = useRouter();
 
     const form = useForm<z.infer<typeof VendorRegisterFormSchema>>({
-        resolver: zodResolver(VendorRegisterFormSchema),
-        defaultValues: {
-            fullName: '',
-            email: '',
-            password: '',
-            vendorAddress: '',
-            facilityName: '',
-            vendorPhone: '',
-            vendorIdentityNo: '',
-        },
+      resolver: zodResolver(VendorRegisterFormSchema),
+      defaultValues: {
+        fullName: '',
+        email: '',
+        password: '',
+        vendorAddress: '',
+        facilityName: '',
+        vendorPhone: '',
+        vendorIdentityNo: '',
+        image: new File([""], "filename"),
+      },
     });
 
     async function onSubmit(data: z.infer<typeof VendorRegisterFormSchema>) {
-        const { fullName, email, password, vendorAddress, facilityName, vendorPhone, vendorIdentityNo } = data;
+        setIsLoading(true);
+        const { fullName, email, password, vendorAddress, facilityName, vendorPhone, vendorIdentityNo, image } = data;
 
         try {
-            const formData = new URLSearchParams();
+            const formData = new FormData(); // Use FormData instead of URLSearchParams
             formData.append("full_name", fullName);
             formData.append("email", email);
             formData.append("password", password);
-            if (vendorAddress) formData.append("vendor_address", vendorAddress);
-            if (facilityName) formData.append("facility_name", facilityName);
-            if (vendorPhone) formData.append("vendor_phone", vendorPhone);
-            if (vendorIdentityNo) formData.append("vendor_identity_no", vendorIdentityNo);
+            formData.append("vendor_address", vendorAddress);
+            formData.append("facility_name", facilityName);
+            formData.append("vendor_phone", vendorPhone);
+            formData.append("vendor_identity_no", vendorIdentityNo);
+            formData.append("image", image); // Append the file here
 
             const baseURL = process.env.NEXT_PUBLIC_SHARE_ODTU_API_URL;
             const response = await fetch(`${baseURL}/users/register_vendor`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formData.toString(),
+                body: formData,
             });
 
             if (response.ok) {
@@ -71,12 +85,15 @@ export function VendorRegisterForm() {
                 router.push('/auth/login');
             } else if (response.status === 409) {
                 toast.error('User already registered');
+                setIsLoading(false);
             } else {
                 toast.error('Error registering user');
+                setIsLoading(false);
             }
         } catch (error) {
             console.error(error);
             toast.error('Error registering user');
+            setIsLoading(false);
         }
     }
 
@@ -85,7 +102,7 @@ export function VendorRegisterForm() {
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="w-full flex flex-col justify-center items-center gap-y-4"
+                    className="w-full flex flex-col justify-center items-center gap-y-4 md:grid sm:grid-cols-2 md:gap-x-4"
                 >
                     <FormField
                         control={form.control}
@@ -204,9 +221,42 @@ export function VendorRegisterForm() {
                             </FormItem>
                         )}
                     />
-
-                    <Button type="submit" size={'lg'} className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground">
-                        Register
+                    <FormField
+                        control={form.control}
+                        name="image"
+                        render={({ field }) => (
+                            <FormItem className="w-full">
+                                <FormLabel className="font-bold text-xl">Image</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        className="text-lg px-4 py-2 bg-foreground text-background"
+                                        type="file"
+                                        onChange={(e) => {
+                                            if (!e.target?.files?.[0]) return;
+                                            form.setValue('image', e.target?.files?.[0]);
+                                        }}
+                                        onBlur={field.onBlur}
+                                        name={field.name}
+                                        ref={field.ref}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button 
+                        type="submit" 
+                        size={'lg'} 
+                        className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground col-span-2 mx-auto w-1/2"
+                        disabled={isLoading}
+                    >
+                        {
+                            isLoading ? (
+                                <Loader size={24} className='animate-spin' />
+                            ): (
+                                'Register'
+                            )
+                        }
                     </Button>
                 </form>
             </Form>

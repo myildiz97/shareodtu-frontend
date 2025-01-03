@@ -58,7 +58,10 @@ export const authOptions: NextAuthOptions = {
             (await cookies()).set('session', access_token, {
               maxAge: 30 * 24 * 60 * 60, // 30 days
             });
-            return user;
+            return {
+              ...user,
+              image: null,
+            }
           }
 
           return null;
