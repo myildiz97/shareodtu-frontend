@@ -20,6 +20,10 @@ import {
 } from "@/components/ui/input-otp"
 import { makeRequest } from '@/lib/make-request'
 import toast from 'react-hot-toast'
+import { signIn } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { Loader } from 'lucide-react'
 
 const FormSchema = z.object({
   pin: z.string().min(6, {
@@ -27,7 +31,11 @@ const FormSchema = z.object({
   }),
 })
 
-export function OTPForm({ email, setOpen }: { email: string; setOpen: (open: boolean) => void }) {
+export function OTPForm({ email, password, setOpen, setIsLoggingIn }: { email: string; password: string; setOpen: (open: boolean) => void; setIsLoggingIn: (loading: boolean) => void;  }) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  
+  
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -36,6 +44,8 @@ export function OTPForm({ email, setOpen }: { email: string; setOpen: (open: boo
   })
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setIsLoading(true);
+
     const { pin } = data
     const body = {
       email: email,
@@ -43,8 +53,19 @@ export function OTPForm({ email, setOpen }: { email: string; setOpen: (open: boo
     }
     try {
       await makeRequest("/verify", "POST", body);
-      toast.success("Account verified successfully");
+      toast.success("Account verified successfully! Logging you in...");
       setOpen(false);
+
+      setIsLoggingIn(true);
+      await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
+
+      toast.success('Welcome back!');
+      router.push('/vendors');
+
     } catch (error: any) {
       const errorMessage = error.toString().split(":")[1].trim();
       if (errorMessage === 'Verification code has expired') {
@@ -56,6 +77,8 @@ export function OTPForm({ email, setOpen }: { email: string; setOpen: (open: boo
       } else {
         toast.error('Invalid verification code');
       }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -86,8 +109,18 @@ export function OTPForm({ email, setOpen }: { email: string; setOpen: (open: boo
             </FormItem>
           )}
         />
-        <Button type="submit" className='w-full bg-foreground text-background hover:bg-accent'>
-          Verify Account
+        <Button 
+          type="submit" 
+          className='w-full bg-foreground text-background hover:bg-accent'
+          disabled={isLoading}
+        >
+          {
+            isLoading ? (
+              <Loader size={24} className='animate-spin' />
+            ) : (
+              'Verify Account'
+            )
+          }
         </Button>
       </form>
     </Form>

@@ -81,7 +81,7 @@ export function VendorListTable({ vendorsData }: IVendorListTable) {
                 {row.total_count || 0}
               </TableCell>
               <TableCell>
-                <Badge variant='outline' className={`${getStatusColor(row.vendor.status)} text-white`}>
+                <Badge variant='outline' className={`${getStatusColor(row.vendor.status)} text-white select-none`}>
                   {row.vendor.status}
                 </Badge>
               </TableCell>

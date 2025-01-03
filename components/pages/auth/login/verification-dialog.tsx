@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,7 +8,10 @@ import {
 } from "@/components/ui/dialog"
 import { OTPForm } from './otp-form'
 
-export function VerificationDialog({ open, setOpen, email }: { open: boolean; setOpen: (open: boolean) => void; email: string }) {
+export function VerificationDialog(
+  { open, setOpen, email, password, setIsLoggingIn }: 
+  { open: boolean; setOpen: (open: boolean) => void; email: string; password: string; setIsLoggingIn: (loading: boolean) => void; }
+) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {/* <DialogTrigger asChild>
@@ -24,7 +26,7 @@ export function VerificationDialog({ open, setOpen, email }: { open: boolean; se
             Please enter the code sent to your email.
           </DialogDescription>
         </DialogHeader>
-        <OTPForm email={email} setOpen={setOpen} />
+        <OTPForm email={email} password={password} setOpen={setOpen} setIsLoggingIn={setIsLoggingIn} />
       </DialogContent>
     </Dialog>
   )

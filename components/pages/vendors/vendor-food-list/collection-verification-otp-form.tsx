@@ -59,8 +59,6 @@ export function CollectionVerificationOTPForm({ foodData }: { foodData: IFoodDat
         window.location.reload();
       }, 1000);
     } catch (error: any) {
-      const errorMessage = error.toString().split(":")[1].trim();
-      console.log(errorMessage)
       console.error('Error verifying collection code', error);
       toast.error('Invalid collection code');
     }
@@ -121,7 +119,7 @@ export function CollectionVerificationOTPForm({ foodData }: { foodData: IFoodDat
             )}
           />
         </div>
-        <Button type="submit" className='w-fit bg-background text-foreground hover:bg-accent hover:text-background'>
+        <Button type="submit" className='w-fit bg-background text-foreground hover:bg-accent'>
           Verify Code
         </Button>
       </form>

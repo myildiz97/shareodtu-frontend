@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { VerificationDialog } from './verification-dialog';
+import { Loader } from 'lucide-react';
 
 const LoginFormSchema = z.object({
   email: z.string().email({
@@ -27,6 +28,7 @@ const LoginFormSchema = z.object({
 export function LoginForm() {
   const router = useRouter();
   const [verificationDialogOpen, setVerificationDialogOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
@@ -38,6 +40,7 @@ export function LoginForm() {
 
   async function onSubmit(data: z.infer<typeof LoginFormSchema>) {
     // console.log(data);
+    setIsLoading(true);
 
     const { email, password } = data;
 
@@ -69,19 +72,20 @@ export function LoginForm() {
         }
       }
 
-
       if (authRes?.error) {
         toast.error('Invalid Credentials');
+        setIsLoading(false);
         return;
       }
 
       toast.success('Welcome back!');
-
       router.push('/vendors');
+
     } catch (error: any) {
       console.error(error);
       toast.error('Error logging in');
-    }
+      setIsLoading(false);
+    } 
   }
 
   return (
@@ -89,7 +93,9 @@ export function LoginForm() {
       <VerificationDialog 
         open={verificationDialogOpen} 
         setOpen={setVerificationDialogOpen}
-        email={form.getValues('email')} 
+        email={form.getValues('email')}
+        password={form.getValues('password')}
+        setIsLoggingIn={setIsLoading}
       />
       <Form {...form}>
         <form
@@ -135,8 +141,19 @@ export function LoginForm() {
           {/* <Link href="/forgot-password" className="hover:text-accent">
             Forgot Password?
           </Link> */}
-          <Button type="submit" size={'lg'} className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground">
-            Log in
+          <Button 
+            type="submit" 
+            size={'lg'} 
+            className="text-lg bg-background text-foreground hover:bg-accent hover:text-foreground"
+            disabled={isLoading}
+          >
+            {
+              isLoading ? (
+                <Loader size={24} className='animate-spin' />
+              ): (
+                'Log In'
+              )
+            }
           </Button>
         </form>
       </Form>

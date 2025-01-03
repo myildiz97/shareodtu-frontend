@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react"
+import { NumberInput } from '@mantine/core';
 import {
   Table,
   TableBody,
@@ -9,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Check, Edit, Plus, SortAsc, SortDesc, Trash2, X } from 'lucide-react'
+import { Check, Edit, Loader, Plus, SortAsc, SortDesc, Trash2, X } from 'lucide-react'
 import { IFoodData, IUpdateFoodData } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,6 +33,8 @@ interface IVendorDetailTable {
 }
 
 export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IVendorDetailTable) {
+  const [saving, setSaving] = useState<boolean>(false)
+
   const [data, setData] = useState(foodData)
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null)
 
@@ -60,13 +63,15 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
   }, [])
 
   const handleSave = useCallback(async (foodName: string) => {
+    setSaving(true)
     const updatedData = data.find(food => food.food_type === foodName)
     if (!updatedData) return;
     const updatedFood: IUpdateFoodData = {}
     if (editFoodName && foodName !== editFoodName) updatedFood.food_name = editFoodName
-    if (editValue && updatedData.count !== editValue) updatedFood.count = editValue
+    if (editValue >= 0 && updatedData.count !== editValue) updatedFood.count = editValue
     if (Object.keys(updatedFood).length === 0) return;
     await updateFood(foodName, updatedFood);
+    setSaving(false)
     window.location.reload();
     setEditingFood(null)
   }, [editValue, editFoodName])
@@ -95,7 +100,6 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
     
 
   const handleTakeFood = useCallback(async (foodName: string) => {
-    console.log(`Taking food: ${foodName} - ${vendorName} - ${vendorId}`)
     setSelectedFood(foodName);
     try {
       const data = await makeRequest('/foods/collect', 'POST', { food_type: foodName, vendor_id: vendorId }) as any;
@@ -167,12 +171,19 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
                     <TableCell>
                       {editingFood === food.food_type ? (
                         <div className="flex items-center space-x-2">
-                          <Input
+                          <NumberInput
+                            allowNegative={false}
+                            value={editValue}
+                            onChange={(value) => setEditValue(Number(value))}
+                            className="h-9 w-fit rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          />
+
+                          {/* <Input
                             type="number"
                             value={editValue}
                             onChange={(e) => setEditValue(Number(e.target.value))}
                             className="w-20"
-                          />
+                          /> */}
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -181,8 +192,15 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
                                   variant="ghost"
                                   onClick={() => handleSave(food.food_type)}
                                   className="h-8 w-8"
+                                  disabled={saving}
                                 >
-                                  <Check className="h-4 w-4" />
+                                  {
+                                    saving ? (
+                                      <Loader className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                      <Check className="h-4 w-4" />
+                                    )
+                                  }
                                 </Button>
                               </TooltipTrigger>
                               <TooltipContent>
@@ -262,12 +280,18 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
                   />
                 </TableCell>
                 <TableCell>
-                  <Input
+                  <NumberInput
+                    allowNegative={false}
+                    value={newFood.count}
+                    onChange={(value) => setNewFood({ ...newFood, count: Number(value) })}
+                    className="h-9 w-fit rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                  {/* <Input
                     type="number"
                     placeholder="Food count"
                     value={newFood.count}
                     onChange={(e) => setNewFood({ ...newFood, count: Number(e.target.value) })}
-                  />
+                  /> */}
                 </TableCell>
                 <TableCell>
                   <TooltipProvider>
@@ -302,7 +326,13 @@ export function VendorDetailTable({ vendorId, vendorName, foodData, action }: IV
                       {food.count}
                     </TableCell>
                     <TableCell>
-                      <Button variant="outline" size="sm" className="text-foreground hover:bg-accent" onClick={() => handleTakeFood(food.food_type)}>
+                      <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-foreground hover:bg-accent" 
+                      onClick={() => handleTakeFood(food.food_type)}
+                      disabled={food.count === 0}
+                    >
                         Take
                       </Button>                    
                     </TableCell>
