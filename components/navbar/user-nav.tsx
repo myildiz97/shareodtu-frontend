@@ -32,9 +32,9 @@ export function UserNav() {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu> 
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size={'icon'} className="h-10 w-10 px-0">
+        <Button variant="ghost" size={'icon'} className="h-10 w-10 px-0 ml-auto">
           <User />
           <span className="sr-only">Open user menu</span>
         </Button>

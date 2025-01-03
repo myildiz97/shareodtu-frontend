@@ -84,7 +84,11 @@ export function LoginForm() {
       }
 
       toast.success('Welcome back!');
-      router.push('/vendors');
+      if (userType === 'vendor') {
+        router.push('/vendors');
+      } else {
+        router.push('/dashboard');
+      }
 
     } catch (error: any) {
       console.error(error);
